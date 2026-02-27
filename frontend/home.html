@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Alumni Tracking System</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1 class="logo">Alumni Portal</h1>
+            <nav class="nav">
+                <a href="home.html" class="nav-link active">Home</a>
+                <a href="profile.html" class="nav-link">Profile</a>
+                <a href="alumni-form.html" class="nav-link">Alumni Form</a>
+                <a href="gallery.html" class="nav-link">Gallery</a>
+                <button id="logoutBtn" class="btn btn-secondary btn-sm">Logout</button>
+            </nav>
+        </div>
+    </div>
+
+    <div class="container main-content">
+        <div class="card">
+            <h1>Welcome, Alumni!</h1>
+            <p class="welcome-text">Thank you for being part of our alumni network. Use the navigation above to access your profile, submit your tracer form, or view other alumni.</p>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!auth.requireAuth()) return;
+            
+            const logoutBtn = document.getElementById('logoutBtn');
+            logoutBtn.addEventListener('click', () => auth.logout());
+        });
+    </script>
+</body>
+</html>

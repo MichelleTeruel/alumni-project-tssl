@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Alumni Tracking System</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1 class="logo">Alumni Portal</h1>
+            <nav class="nav">
+                <a href="home.html" class="nav-link">Home</a>
+                <a href="profile.html" class="nav-link active">Profile</a>
+                <a href="alumni-form.html" class="nav-link">Alumni Form</a>
+                <a href="gallery.html" class="nav-link">Gallery</a>
+                <button id="logoutBtn" class="btn btn-secondary btn-sm">Logout</button>
+            </nav>
+        </div>
+    </div>
+
+    <div class="container main-content">
+        <div class="card">
+            <h1>My Profile</h1>
+            
+            <div class="profile-card">
+                <div class="profile-photo">
+                    <div class="photo-placeholder">
+                        <span>No Photo</span>
+                    </div>
+                </div>
+                <div class="profile-details">
+                    <div class="detail-row">
+                        <label>Email:</label>
+                        <span id="email">Loading...</span>
+                    </div>
+                    <div class="detail-row">
+                        <label>First Name:</label>
+                        <span id="firstName">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <label>Last Name:</label>
+                        <span id="lastName">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <label>Course:</label>
+                        <span id="course">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <label>Graduation Year:</label>
+                        <span id="graduationYear">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <label>Current Work:</label>
+                        <span id="currentWork">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <label>Form Status:</label>
+                        <span id="formStatus">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!auth.requireAuth()) return;
+
+            const logoutBtn = document.getElementById('logoutBtn');
+            logoutBtn.addEventListener('click', () => auth.logout());
+
+            loadProfile();
+        });
+
+        async function loadProfile() {
+            const user = auth.getUser();
+            document.getElementById('email').textContent = user?.email || '-';
+
+            try {
+                const data = await api.getMySubmission();
+                document.getElementById('firstName').textContent = data.first_name || '-';
+                document.getElementById('lastName').textContent = data.last_name || '-';
+                document.getElementById('course').textContent = data.course || '-';
+                document.getElementById('graduationYear').textContent = data.graduation_year || '-';
+                document.getElementById('currentWork').textContent = data.current_work || '-';
+                
+                const statusEl = document.getElementById('formStatus');
+                statusEl.textContent = data.status || 'Not submitted';
+                statusEl.className = `status-${data.status || 'pending'}`;
+            } catch (error) {
+                console.log('No submission found');
+            }
+        }
+    </script>
+</body>
+</html>

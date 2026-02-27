@@ -75,6 +75,10 @@ const api = {
         return this.request(`/admin/submissions/${id}/${action}`, {
             method: 'PUT'
         });
+    },
+
+    async getApprovedAlumni() {
+        return this.request('/alumni/approved');
     }
 };
 

@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (isAdmin) {
                     window.location.href = 'admin.html';
                 } else {
-                    window.location.href = 'tracer-form.html';
+                    window.location.href = 'home.html';
                 }
             } catch (error) {
                 console.error('Login error:', error);

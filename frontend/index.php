@@ -205,4 +205,15 @@ if ($method === 'PUT' && preg_match('#/api/admin/submissions/(\d+)/(\w+)$#', $ur
     jsonResponse(['message' => "Submission {$status} successfully"]);
 }
 
+if ($method === 'GET' && $uri === '/api/alumni/approved') {
+    $stmt = $db->query('
+        SELECT first_name, last_name, course, graduation_year, current_work, created_at
+        FROM tracer_forms 
+        WHERE status = "approved"
+        ORDER BY created_at DESC
+    ');
+    $alumni = $stmt->fetchAll();
+    jsonResponse($alumni);
+}
+
 jsonResponse(['error' => 'Endpoint not found'], 404);

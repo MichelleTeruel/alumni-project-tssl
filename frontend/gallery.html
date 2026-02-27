@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumni Gallery - Alumni Tracking System</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1 class="logo">Alumni Portal</h1>
+            <nav class="nav">
+                <a href="home.html" class="nav-link">Home</a>
+                <a href="profile.html" class="nav-link">Profile</a>
+                <a href="alumni-form.html" class="nav-link">Alumni Form</a>
+                <a href="gallery.html" class="nav-link active">Gallery</a>
+                <button id="logoutBtn" class="btn btn-secondary btn-sm">Logout</button>
+            </nav>
+        </div>
+    </div>
+
+    <div class="container main-content">
+        <div class="card">
+            <h1>Alumni Gallery</h1>
+            <p class="gallery-subtitle">Connect with fellow alumni</p>
+            
+            <div id="galleryGrid" class="gallery-grid">
+                <p class="loading">Loading alumni...</p>
+            </div>
+            
+            <div id="noAlumni" class="no-alumni" style="display: none;">
+                <p>No approved alumni to display yet.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!auth.requireAuth()) return;
+
+            const logoutBtn = document.getElementById('logoutBtn');
+            logoutBtn.addEventListener('click', () => auth.logout());
+
+            loadAlumni();
+        });
+
+        async function loadAlumni() {
+            const galleryGrid = document.getElementById('galleryGrid');
+            const noAlumni = document.getElementById('noAlumni');
+
+            try {
+                const alumni = await api.getApprovedAlumni();
+                
+                if (alumni.length === 0) {
+                    galleryGrid.style.display = 'none';
+                    noAlumni.style.display = 'block';
+                    return;
+                }
+
+                galleryGrid.innerHTML = alumni.map(person => `
+                    <div class="alumni-card">
+                        <div class="alumni-photo">
+                            <div class="photo-placeholder small">
+                                <span>${person.first_name.charAt(0)}${person.last_name.charAt(0)}</span>
+                            </div>
+                        </div>
+                        <div class="alumni-info">
+                            <h3 class="alumni-name">${person.first_name} ${person.last_name}</h3>
+                            <p class="alumni-course">${person.course}</p>
+                            <p class="alumni-year">Class of ${person.graduation_year}</p>
+                            ${person.current_work ? `<p class="alumni-work">${person.current_work}</p>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                galleryGrid.innerHTML = `<p class="error">Error loading alumni: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

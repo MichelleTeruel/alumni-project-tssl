@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumni Form - Alumni Tracking System</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1 class="logo">Alumni Portal</h1>
+            <nav class="nav">
+                <a href="home.html" class="nav-link">Home</a>
+                <a href="profile.html" class="nav-link">Profile</a>
+                <a href="alumni-form.html" class="nav-link active">Alumni Form</a>
+                <a href="gallery.html" class="nav-link">Gallery</a>
+                <button id="logoutBtn" class="btn btn-secondary btn-sm">Logout</button>
+            </nav>
+        </div>
+    </div>
+
+    <div class="container main-content">
+        <div class="card">
+            <h1>Alumni Tracer Form</h1>
+            
+            <div id="statusMessage" class="alert" style="display: none;"></div>
+            
+            <div id="statusBadge" class="status-badge" style="display: none;">
+                <span class="badge-text"></span>
+            </div>
+            
+            <form id="tracerForm">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" required>
+                </div>
+                <div class="form-group">
+                    <label for="course">Course</label>
+                    <input type="text" id="course" name="course" required>
+                </div>
+                <div class="form-group">
+                    <label for="graduationYear">Graduation Year</label>
+                    <input type="number" id="graduationYear" name="graduationYear" min="1950" max="2030" required>
+                </div>
+                <div class="form-group">
+                    <label for="currentWork">Current Work</label>
+                    <textarea id="currentWork" name="currentWork" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!auth.requireAuth()) return;
+
+            const logoutBtn = document.getElementById('logoutBtn');
+            logoutBtn.addEventListener('click', () => auth.logout());
+
+            const tracerForm = document.getElementById('tracerForm');
+            const statusMessage = document.getElementById('statusMessage');
+            const statusBadge = document.getElementById('statusBadge');
+
+            loadSubmission();
+
+            async function loadSubmission() {
+                try {
+                    const data = await api.getMySubmission();
+                    document.getElementById('firstName').value = data.first_name || '';
+                    document.getElementById('lastName').value = data.last_name || '';
+                    document.getElementById('course').value = data.course || '';
+                    document.getElementById('graduationYear').value = data.graduation_year || '';
+                    document.getElementById('currentWork').value = data.current_work || '';
+
+                    if (data.status) {
+                        showStatusBadge(data.status);
+                        if (data.status !== 'pending') {
+                            tracerForm.querySelector('button[type="submit"]').disabled = true;
+                            disableForm();
+                        }
+                    }
+                } catch (error) {
+                    console.log('No submission found');
+                }
+            }
+
+            function showStatusBadge(status) {
+                const badge = statusBadge;
+                const text = badge.querySelector('.badge-text');
+                
+                badge.className = 'status-badge';
+                if (status === 'pending') {
+                    badge.classList.add('badge-pending');
+                    text.textContent = 'Status: Pending Review';
+                } else if (status === 'approved') {
+                    badge.classList.add('badge-approved');
+                    text.textContent = 'Status: Approved';
+                } else if (status === 'rejected') {
+                    badge.classList.add('badge-rejected');
+                    text.textContent = 'Status: Rejected';
+                }
+                
+                badge.style.display = 'block';
+            }
+
+            function disableForm() {
+                const inputs = tracerForm.querySelectorAll('input, textarea');
+                inputs.forEach(input => input.disabled = true);
+            }
+
+            tracerForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const data = {
+                    first_name: document.getElementById('firstName').value,
+                    last_name: document.getElementById('lastName').value,
+                    course: document.getElementById('course').value,
+                    graduation_year: document.getElementById('graduationYear').value,
+                    current_work: document.getElementById('currentWork').value
+                };
+                
+                try {
+                    await api.submitTracer(data);
+                    showStatusMessage('Tracer form submitted successfully!', 'success');
+                    showStatusBadge('pending');
+                    tracerForm.querySelector('button[type="submit"]').disabled = true;
+                    disableForm();
+                } catch (error) {
+                    showStatusMessage(error.message, 'error');
+                }
+            });
+
+            function showStatusMessage(text, type) {
+                statusMessage.textContent = text;
+                statusMessage.className = `alert alert-${type}`;
+                statusMessage.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
