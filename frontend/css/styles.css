@@ -74,7 +74,7 @@ label {
     font-weight: 500;
 }
 
-input, textarea {
+input, textarea, select {
     width: 100%;
     padding: 12px;
     border: 1px solid #ddd;
@@ -83,9 +83,23 @@ input, textarea {
     transition: border-color 0.3s ease;
 }
 
-input:focus, textarea:focus {
+input:focus, textarea:focus, select:focus {
     outline: none;
     border-color: #667eea;
+}
+
+.input-with-select {
+    display: flex;
+    gap: 10px;
+}
+
+.input-with-select input {
+    flex: 1;
+}
+
+.input-with-select select {
+    width: 100px;
+    cursor: pointer;
 }
 
 .btn {
@@ -219,6 +233,18 @@ tr:hover {
 .actions {
     display: flex;
     gap: 8px;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.table-container {
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    min-width: 900px;
 }
 
 .header {
@@ -431,6 +457,22 @@ tr:hover {
 .btn-sm {
     padding: 6px 16px;
     font-size: 0.9rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.status-employed {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.status-unemployed {
+    color: #dc3545;
+    font-weight: 600;
 }
 
 @media (max-width: 768px) {

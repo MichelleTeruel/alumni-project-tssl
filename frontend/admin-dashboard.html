@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Alumni Tracking System</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .navbar .logo {
+            color: #333;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+        .navbar .logo span {
+            color: #667eea;
+        }
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 10px;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar a {
+            color: #333;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        .navbar a:hover {
+            color: #667eea;
+            background: #f0f4ff;
+        }
+        .navbar a.active {
+            color: #667eea;
+            background: #f0f4ff;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            min-width: 1000px;
+        }
+        .actions {
+            white-space: nowrap;
+        }
+        .actions .btn {
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            margin-right: 3px;
+            margin-bottom: 3px;
+            display: inline-block;
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Admin<span>Panel</span></div>
+        <ul>
+            <li><a href="admin-home.html">Home</a></li>
+            <li><a href="admin-dashboard.html" class="active">Dashboard</a></li>
+            <li><a href="admin-announcements.html">Announcements</a></li>
+            <li><a href="admin-analytics.html">Analytics</a></li>
+            <li><a href="#" id="logoutBtn">Logout</a></li>
+        </ul>
+    </nav>
+    
+    <div class="container">
+        <div class="card">
+            <h1>Alumni Dashboard</h1>
+            
+            <div id="message" class="alert" style="display: none;"></div>
+            
+            <div class="table-container">
+                <table id="submissionsTable">
+                    <thead>
+                        <tr>
+                            <th>School ID</th>
+                            <th>Full Name</th>
+                            <th>Course</th>
+                            <th>Year</th>
+                            <th>Current Work</th>
+                            <th>Employment</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="submissionsBody">
+                        <tr><td colspan="8">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

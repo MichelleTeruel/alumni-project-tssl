@@ -23,21 +23,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('password').value;
             const isAdmin = currentTab === 'admin';
             
-            console.log('Login attempt:', { email, isAdmin, endpoint: isAdmin ? '/admin/login' : '/auth/login' });
-            
             try {
                 const data = await api.login(email, password, isAdmin);
-                console.log('Login success:', data);
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
                 
                 if (isAdmin) {
-                    window.location.href = 'admin.html';
+                    window.location.href = 'admin-home.html';
                 } else {
                     window.location.href = 'home.html';
                 }
             } catch (error) {
-                console.error('Login error:', error);
                 alert(error.message);
             }
         });
@@ -47,6 +43,10 @@ document.addEventListener('DOMContentLoaded', () => {
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
+            const schoolId = document.getElementById('schoolId').value;
+            const firstName = document.getElementById('firstName').value;
+            const middleName = document.getElementById('middleName').value;
+            const lastName = document.getElementById('lastName').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
@@ -57,7 +57,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             try {
-                await api.register(email, password);
+                await api.register({
+                    school_id: schoolId,
+                    first_name: firstName,
+                    middle_name: middleName,
+                    last_name: lastName,
+                    email: email,
+                    password: password
+                });
                 alert('Registration successful! Please login.');
                 window.location.href = 'index.html';
             } catch (error) {

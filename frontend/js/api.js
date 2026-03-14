@@ -25,14 +25,8 @@ const api = {
             config.body = JSON.stringify(config.body);
         }
 
-        const url = `${API_BASE}${endpoint}`;
-        console.log('Full URL:', url);
-        console.log('Request config:', config);
-        
-        const response = await fetch(url, config);
+        const response = await fetch(`${API_BASE}${endpoint}`, config);
         const data = await response.json();
-        
-        console.log('API Response:', response.status, data);
 
         if (!response.ok) {
             throw new Error(data.error || 'Request failed');
@@ -41,10 +35,10 @@ const api = {
         return data;
     },
 
-    async register(email, password) {
+    async register(data) {
         return this.request('/auth/register', {
             method: 'POST',
-            body: { email, password }
+            body: data
         });
     },
 
@@ -67,6 +61,20 @@ const api = {
         return this.request('/tracer/my-submission');
     },
 
+    async updateWork(data) {
+        return this.request('/tracer/update-work', {
+            method: 'PUT',
+            body: data
+        });
+    },
+
+    async requestWorkChange(newWork) {
+        return this.request('/tracer/request-work-change', {
+            method: 'POST',
+            body: { new_work: newWork }
+        });
+    },
+
     async getSubmissions() {
         return this.request('/admin/submissions');
     },
@@ -75,6 +83,57 @@ const api = {
         return this.request(`/admin/submissions/${id}/${action}`, {
             method: 'PUT'
         });
+    },
+
+    async updateAlumni(id, data) {
+        return this.request(`/admin/alumni/${id}`, {
+            method: 'PUT',
+            body: data
+        });
+    },
+
+    async deleteAlumni(id) {
+        return this.request(`/admin/alumni/${id}`, {
+            method: 'DELETE'
+        });
+    },
+
+    async getAnnouncements() {
+        return this.request('/announcements');
+    },
+
+    async createAnnouncement(data) {
+        return this.request('/announcements', {
+            method: 'POST',
+            body: data
+        });
+    },
+
+    async updateAnnouncement(id, data) {
+        return this.request(`/announcements/${id}`, {
+            method: 'PUT',
+            body: data
+        });
+    },
+
+    async deleteAnnouncement(id) {
+        return this.request(`/announcements/${id}`, {
+            method: 'DELETE'
+        });
+    },
+
+    async getWorkChangeRequests() {
+        return this.request('/admin/work-change-requests');
+    },
+
+    async updateWorkChangeRequest(id, action) {
+        return this.request(`/admin/work-change-requests/${id}/${action}`, {
+            method: 'PUT'
+        });
+    },
+
+    async getAnalytics() {
+        return this.request('/admin/analytics');
     },
 
     async getApprovedAlumni() {

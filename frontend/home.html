@@ -5,35 +5,298 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - Alumni Tracking System</title>
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .navbar .logo {
+            color: #333;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+        .navbar .logo span {
+            color: #667eea;
+        }
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 10px;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar a {
+            color: #333;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        .navbar a:hover {
+            color: #667eea;
+            background: #f0f4ff;
+        }
+        .navbar a.active {
+            color: #667eea;
+            background: #f0f4ff;
+        }
+        .home-container {
+            display: flex;
+            gap: 20px;
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+            align-items: stretch;
+        }
+        .profile-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .profile-details {
+            flex: 1;
+            min-width: 0;
+        }
+        .profile-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin: 0 0 10px 0;
+        }
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .profile-field {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .profile-field:last-child {
+            border-bottom: none;
+        }
+        .profile-field .label {
+            color: #666;
+            font-size: 0.85rem;
+        }
+        .profile-field .value {
+            color: #333;
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-align: right;
+        }
+        .employment-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        .employment-badge.employed {
+            background: #d4edda;
+            color: #155724;
+        }
+        .employment-badge.unemployed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .announcements-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .announcements-section h2 {
+            margin: 0 0 20px 0;
+            color: #333;
+            font-size: 1.3rem;
+        }
+        .announcement-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+        .announcement-card:last-child {
+            margin-bottom: 0;
+        }
+        .announcement-card h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+            font-size: 1.1rem;
+        }
+        .announcement-card p {
+            margin: 0;
+            color: #666;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+        .announcement-card .date {
+            font-size: 0.85rem;
+            color: #999;
+            margin-top: 12px;
+        }
+        .welcome-msg {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .welcome-msg h2 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .welcome-msg p {
+            margin: 0;
+            color: #666;
+            line-height: 1.6;
+        }
+    </style>
 </head>
 <body>
-    <div class="header">
-        <div class="header-content">
-            <h1 class="logo">Alumni Portal</h1>
-            <nav class="nav">
-                <a href="home.html" class="nav-link active">Home</a>
-                <a href="profile.html" class="nav-link">Profile</a>
-                <a href="alumni-form.html" class="nav-link">Alumni Form</a>
-                <a href="gallery.html" class="nav-link">Gallery</a>
-                <button id="logoutBtn" class="btn btn-secondary btn-sm">Logout</button>
-            </nav>
+    <nav class="navbar">
+        <div class="logo">Alumni<span>Tracking</span></div>
+        <ul>
+            <li><a href="home.html" class="active">Home</a></li>
+            <li><a href="tracer-form.html">Tracer Form</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="#" id="logoutBtn">Logout</a></li>
+        </ul>
+    </nav>
+    
+    <div class="home-container">
+        <div class="profile-card">
+            <div class="profile-avatar" id="profileAvatar">-</div>
+            <div class="profile-details">
+                <h3 class="profile-name" id="profileName">-</h3>
+                <div class="profile-info">
+                    <div class="profile-field">
+                        <span class="label">School ID</span>
+                        <span class="value" id="profileSchoolId">-</span>
+                    </div>
+                    <div class="profile-field">
+                        <span class="label">Course</span>
+                        <span class="value" id="profileCourse">-</span>
+                    </div>
+                    <div class="profile-field">
+                        <span class="label">Graduation Year</span>
+                        <span class="value" id="profileYear">-</span>
+                    </div>
+                    <div class="profile-field">
+                        <span class="label">Current Work</span>
+                        <span class="value" id="profileWork">-</span>
+                    </div>
+                    <div class="profile-field">
+                        <span class="label">Employment</span>
+                        <span class="value" id="profileEmployment">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="announcements-section">
+            <h2>Announcements</h2>
+            <div class="welcome-msg">
+                <h2>Welcome!</h2>
+                <p>Stay connected with your alma mater and help us improve our programs by updating your professional journey.</p>
+            </div>
+            <div id="announcementsList">
+                <p>Loading announcements...</p>
+            </div>
         </div>
     </div>
-
-    <div class="container main-content">
-        <div class="card">
-            <h1>Welcome, Alumni!</h1>
-            <p class="welcome-text">Thank you for being part of our alumni network. Use the navigation above to access your profile, submit your tracer form, or view other alumni.</p>
-        </div>
-    </div>
-
+    
     <script src="js/api.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             if (!auth.requireAuth()) return;
+
+            document.getElementById('logoutBtn').addEventListener('click', () => auth.logout());
+
+            const user = auth.getUser();
             
-            const logoutBtn = document.getElementById('logoutBtn');
-            logoutBtn.addEventListener('click', () => auth.logout());
+            const fullName = `${user.last_name}, ${user.first_name}${user.middle_name ? ' ' + user.middle_name : ''}`;
+            document.getElementById('profileName').textContent = fullName;
+            document.getElementById('profileAvatar').textContent = user.first_name ? user.first_name.charAt(0).toUpperCase() : '-';
+            document.getElementById('profileSchoolId').textContent = user.school_id || '-';
+
+            loadProfile();
+            loadAnnouncements();
+
+            async function loadProfile() {
+                try {
+                    const data = await api.getMySubmission();
+                    
+                    document.getElementById('profileCourse').textContent = data.course || '-';
+                    document.getElementById('profileYear').textContent = data.graduation_year || '-';
+                    document.getElementById('profileWork').textContent = data.current_work || 'Not provided';
+                    
+                    const employmentStatus = data.employment_status || 'unemployed';
+                    const badge = employmentStatus === 'employed' 
+                        ? '<span class="employment-badge employed">Employed</span>' 
+                        : '<span class="employment-badge unemployed">Unemployed</span>';
+                    document.getElementById('profileEmployment').innerHTML = badge;
+                } catch (error) {
+                    document.getElementById('profileCourse').textContent = 'Not submitted';
+                    document.getElementById('profileYear').textContent = 'Not submitted';
+                    document.getElementById('profileWork').textContent = 'Not submitted';
+                    document.getElementById('profileEmployment').innerHTML = '<span class="employment-badge unemployed">Not submitted</span>';
+                }
+            }
+
+            async function loadAnnouncements() {
+                try {
+                    const announcements = await api.getAnnouncements();
+                    
+                    const container = document.getElementById('announcementsList');
+                    if (announcements.length === 0) {
+                        container.innerHTML = '<p style="color:#999;">No announcements at this time.</p>';
+                        return;
+                    }
+
+                    container.innerHTML = announcements.map(ann => `
+                        <div class="announcement-card">
+                            <h3>${ann.title}</h3>
+                            <p>${ann.message}</p>
+                            <div class="date">${new Date(ann.created_at).toLocaleDateString()}</div>
+                        </div>
+                    `).join('');
+                } catch (error) {
+                    console.error(error);
+                }
+            }
         });
     </script>
 </body>
