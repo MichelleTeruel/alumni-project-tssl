@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:8000/api';
+const API_BASE = window.location.origin;
 
 const api = {
     async request(endpoint, options = {}) {
@@ -36,14 +36,14 @@ const api = {
     },
 
     async register(data) {
-        return this.request('/auth/register', {
+        return this.request('/api/auth/register', {
             method: 'POST',
             body: data
         });
     },
 
     async login(email, password, isAdmin = false) {
-        const endpoint = isAdmin ? '/admin/login' : '/auth/login';
+        const endpoint = isAdmin ? '/api/admin/login' : '/api/auth/login';
         return this.request(endpoint, {
             method: 'POST',
             body: { email, password }
@@ -51,93 +51,93 @@ const api = {
     },
 
     async submitTracer(data) {
-        return this.request('/tracer/submit', {
+        return this.request('/api/tracer/submit', {
             method: 'POST',
             body: data
         });
     },
 
     async getMySubmission() {
-        return this.request('/tracer/my-submission');
+        return this.request('/api/tracer/my-submission');
     },
 
     async updateWork(data) {
-        return this.request('/tracer/update-work', {
+        return this.request('/api/tracer/update-work', {
             method: 'PUT',
             body: data
         });
     },
 
     async requestWorkChange(newWork) {
-        return this.request('/tracer/request-work-change', {
+        return this.request('/api/tracer/request-work-change', {
             method: 'POST',
             body: { new_work: newWork }
         });
     },
 
     async getSubmissions() {
-        return this.request('/admin/submissions');
+        return this.request('/api/admin/submissions');
     },
 
     async updateSubmissionStatus(id, action) {
-        return this.request(`/admin/submissions/${id}/${action}`, {
+        return this.request(`/api/admin/submissions/${id}/${action}`, {
             method: 'PUT'
         });
     },
 
     async updateAlumni(id, data) {
-        return this.request(`/admin/alumni/${id}`, {
+        return this.request(`/api/admin/alumni/${id}`, {
             method: 'PUT',
             body: data
         });
     },
 
     async deleteAlumni(id) {
-        return this.request(`/admin/alumni/${id}`, {
+        return this.request(`/api/admin/alumni/${id}`, {
             method: 'DELETE'
         });
     },
 
     async getAnnouncements() {
-        return this.request('/announcements');
+        return this.request('/api/announcements');
     },
 
     async createAnnouncement(data) {
-        return this.request('/announcements', {
+        return this.request('/api/announcements', {
             method: 'POST',
             body: data
         });
     },
 
     async updateAnnouncement(id, data) {
-        return this.request(`/announcements/${id}`, {
+        return this.request(`/api/announcements/${id}`, {
             method: 'PUT',
             body: data
         });
     },
 
     async deleteAnnouncement(id) {
-        return this.request(`/announcements/${id}`, {
+        return this.request(`/api/announcements/${id}`, {
             method: 'DELETE'
         });
     },
 
     async getWorkChangeRequests() {
-        return this.request('/admin/work-change-requests');
+        return this.request('/api/admin/work-change-requests');
     },
 
     async updateWorkChangeRequest(id, action) {
-        return this.request(`/admin/work-change-requests/${id}/${action}`, {
+        return this.request(`/api/admin/work-change-requests/${id}/${action}`, {
             method: 'PUT'
         });
     },
 
     async getAnalytics() {
-        return this.request('/admin/analytics');
+        return this.request('/api/admin/analytics');
     },
 
     async getApprovedAlumni() {
-        return this.request('/alumni/approved');
+        return this.request('/api/alumni/approved');
     }
 };
 
@@ -162,16 +162,22 @@ const auth = {
         return user && user.role === 'alumni';
     },
 
+    isAuthenticated() {
+        const token = localStorage.getItem('token');
+        const user = this.getUser();
+        return !!token && !!user;
+    },
+
     logout() {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-        window.location.href = 'index.html';
+        window.location.href = 'guest-view.html';
     },
 
     requireAuth() {
         const user = this.getUser();
         if (!user) {
-            window.location.href = 'index.html';
+            window.location.href = 'guest-view.html';
             return false;
         }
         return true;
@@ -179,7 +185,7 @@ const auth = {
 
     requireAdmin() {
         if (!this.requireAuth() || !this.isAdmin()) {
-            window.location.href = 'index.html';
+            window.location.href = 'guest-view.html';
             return false;
         }
         return true;

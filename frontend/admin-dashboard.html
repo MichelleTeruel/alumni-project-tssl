@@ -65,6 +65,31 @@
             display: inline-block;
             width: auto;
         }
+        .dashboard-container {
+            max-width: 100%;
+            padding: 20px;
+        }
+        .dashboard-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        .edit-input {
+            width: 100%;
+            padding: 4px 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+        .edit-select {
+            width: 100%;
+            padding: 4px 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            background: white;
+        }
     </style>
 </head>
 <body>
@@ -79,8 +104,8 @@
         </ul>
     </nav>
     
-    <div class="container">
-        <div class="card">
+    <div class="dashboard-container">
+        <div class="dashboard-card">
             <h1>Alumni Dashboard</h1>
             
             <div id="message" class="alert" style="display: none;"></div>

@@ -5,29 +5,119 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alumni Tracking System</title>
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .role-selection {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        @media (max-width: 500px) {
+            .role-selection {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .role-card {
+            background: #f8f9fa;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 30px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 120px;
+        }
+        }
+        .role-card:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .role-card.active {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        .role-card .icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .role-card .role-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95rem;
+        }
+        .login-section {
+            display: none;
+        }
+        .login-section.visible {
+            display: block;
+        }
+        .back-btn {
+            background: none;
+            border: none;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            padding: 0;
+            text-decoration: underline;
+        }
+        .back-btn:hover {
+            color: #5568d3;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <div class="card">
             <h1>Alumni Tracking System</h1>
-            <div class="tabs">
-                <button class="tab-btn active" data-tab="alumni">Alumni Login</button>
-                <button class="tab-btn" data-tab="admin">Admin Login</button>
+            
+            <div class="role-selection" id="roleSelection">
+                <div class="role-card" data-role="alumni">
+                    <span class="icon">🎓</span>
+                    <span class="role-name">Alumni</span>
+                </div>
+                <div class="role-card" data-role="admin">
+                    <span class="icon">🛡️</span>
+                    <span class="role-name">Admin</span>
+                </div>
+                <div class="role-card" data-role="daa">
+                    <span class="icon">🏢</span>
+                    <span class="role-name">DAA</span>
+                </div>
+                <div class="role-card" data-role="osa">
+                    <span class="icon">👥</span>
+                    <span class="role-name">OSA</span>
+                </div>
+                <div class="role-card" data-role="registrar">
+                    <span class="icon">📄</span>
+                    <span class="role-name">Registrar</span>
+                </div>
             </div>
             
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="email">Gmail or School ID</label>
-                    <input type="text" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Login</button>
-            </form>
+            <div class="login-section" id="loginSection">
+                <button class="back-btn" id="backBtn">← Back to role selection</button>
+                <h3 id="loginTitle">Login</h3>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email or School ID</label>
+                        <input type="text" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+            </div>
             
-            <p class="text-center mt-3">
+            <p class="text-center mt-3" id="registerLink">
                 New alumni? <a href="register.html">Register here</a>
             </p>
         </div>
@@ -35,11 +125,16 @@
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
     <script>
-        window.onerror = function(msg, url, line, col, error) {
-            console.error('Global error:', msg, 'at line', line);
-            alert('JavaScript error: ' + msg);
-            return true;
-        };
+        document.addEventListener('DOMContentLoaded', () => {
+            if (auth.isAuthenticated()) {
+                const user = auth.getUser();
+                if (user.role === 'admin') {
+                    window.location.href = 'admin-home.html';
+                } else {
+                    window.location.href = 'home.html';
+                }
+            }
+        });
     </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alumni Gallery - Alumni Tracking System</title>
+    <title>Alumni Tracking System</title>
     <link rel="stylesheet" href="css/styles.css">
     <style>
         .navbar {
@@ -47,6 +47,68 @@
         .navbar a.active {
             color: #667eea;
             background: #f0f4ff;
+        }
+        .welcome-section {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+        .welcome-card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        .welcome-card h1 {
+            color: #333;
+            margin: 0 0 20px 0;
+        }
+        .welcome-card p {
+            color: #666;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+        .welcome-card .btn {
+            margin-top: 20px;
+            display: inline-block;
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .welcome-card .btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+        .feature-box {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .feature-box .icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .feature-box h3 {
+            color: #333;
+            margin: 0 0 10px 0;
+            font-size: 1rem;
+        }
+        .feature-box p {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0;
         }
         .gallery-container {
             max-width: 1200px;
@@ -151,173 +213,137 @@
             color: #888;
             grid-column: 1 / -1;
         }
-        .navbar-left {
-            display: flex;
-            align-items: center;
-        }
-        .hamburger-btn {
+        .view-section {
             display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-            margin-right: 15px;
         }
-        .hamburger-btn span {
+        .view-section.active {
             display: block;
-            width: 25px;
-            height: 3px;
-            background: #333;
-            margin: 5px 0;
-            border-radius: 2px;
-        }
-        @media (max-width: 768px) {
-            .hamburger-btn {
-                display: block;
-            }
-            .navbar ul {
-                display: none;
-            }
         }
     </style>
 </head>
 <body>
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    
     <nav class="navbar">
-        <div class="navbar-left">
-            <button class="hamburger-btn" id="hamburgerBtn">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            <div class="logo">Alumni<span>Tracking</span></div>
-        </div>
+        <div class="logo">Alumni<span>Tracking</span></div>
         <ul>
-            <li><a href="home.html">Home</a></li>
-            <li><a href="gallery.html" class="active">Gallery</a></li>
-            <li><a href="#" id="logoutBtn">Logout</a></li>
+            <li><a href="#" data-view="home" class="active nav-link">Home</a></li>
+            <li><a href="#" data-view="gallery" class="nav-link">Gallery</a></li>
+            <li><a href="index.html" class="nav-link">Login</a></li>
         </ul>
     </nav>
     
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h2>Menu</h2>
-            <button class="close-sidebar" id="closeSidebar">&times;</button>
-        </div>
-        <div class="sidebar-content">
-            <div class="sidebar-profile" id="sidebarProfile">
-                <div class="sidebar-avatar" id="sidebarAvatar">-</div>
-                <div class="sidebar-profile-name" id="sidebarName">-</div>
-                <div class="sidebar-profile-id" id="sidebarId">-</div>
-            </div>
-            <ul class="sidebar-menu">
-                <li><a href="tracer-form.html">📋 Tracer Form</a></li>
-            </ul>
-            <div class="sidebar-section">
-                <div class="sidebar-section-title">Utilities</div>
-                <ul class="sidebar-menu">
-                    <li><button class="sidebar-utility-btn" onclick="alert('Notifications - Coming soon!')"><span class="icon">🔔</span> Notifications</button></li>
-                    <li><button class="sidebar-utility-btn" onclick="alert('Announcements - Coming soon!')"><span class="icon">📢</span> Announcements</button></li>
-                    <li><button class="sidebar-utility-btn" onclick="alert('Messages - Coming soon!')"><span class="icon">💬</span> Messages</button></li>
-                    <li><button class="sidebar-utility-btn" onclick="alert('Settings - Coming soon!')"><span class="icon">⚙️</span> Settings</button></li>
-                </ul>
-            </div>
-            <div class="sidebar-section">
-                <ul class="sidebar-menu">
-                    <li><a href="#" id="logoutBtnSidebar">🚪 Logout</a></li>
-                </ul>
+    <div id="homeView" class="view-section active">
+        <div class="welcome-section">
+            <div class="welcome-card">
+                <h1>Welcome to Alumni Tracking System</h1>
+                <p>Connect with your alma mater and stay updated with the latest news and events. Join our community of graduates and stay connected with fellow alumni.</p>
+                <a href="index.html" class="btn">Login to Access Your Profile</a>
+                
+                <div class="features">
+                    <div class="feature-box">
+                        <div class="icon">🎓</div>
+                        <h3>Alumni Directory</h3>
+                        <p>Connect with fellow graduates</p>
+                    </div>
+                    <div class="feature-box">
+                        <div class="icon">📰</div>
+                        <h3>Latest News</h3>
+                        <p>Stay updated with announcements</p>
+                    </div>
+                    <div class="feature-box">
+                        <div class="icon">👥</div>
+                        <h3>Community</h3>
+                        <p>Join alumni events and activities</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     
-    <div class="gallery-container">
-        <div class="gallery-header">
-            <h1>Alumni Gallery</h1>
-            <div class="filter-row">
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Search by name...">
-                </div>
-                <div class="filter-box">
-                    <select id="courseFilter">
-                        <option value="">All Courses</option>
-                        <option value="BS Information Technology">BS Information Technology</option>
-                        <option value="BS Information System">BS Information System</option>
-                    </select>
-                </div>
-                <div class="filter-box">
-                    <select id="yearFilter">
-                        <option value="">All Years</option>
-                    </select>
+    <div id="galleryView" class="view-section">
+        <div class="gallery-container">
+            <div class="gallery-header">
+                <h1>Alumni Gallery</h1>
+                <div class="filter-row">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Search by name...">
+                    </div>
+                    <div class="filter-box">
+                        <select id="courseFilter">
+                            <option value="">All Courses</option>
+                            <option value="BS Information Technology">BS Information Technology</option>
+                            <option value="BS Information System">BS Information System</option>
+                        </select>
+                    </div>
+                    <div class="filter-box">
+                        <select id="yearFilter">
+                            <option value="">All Years</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="alumni-grid" id="alumniGrid">
-            <div class="no-results">Loading...</div>
+            
+            <div class="alumni-grid" id="alumniGrid">
+                <div class="no-results">Loading...</div>
+            </div>
         </div>
     </div>
     
     <script src="js/api.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const hamburgerBtn = document.getElementById('hamburgerBtn');
-            const sidebar = document.getElementById('sidebar');
-            const sidebarOverlay = document.getElementById('sidebarOverlay');
-            const closeSidebar = document.getElementById('closeSidebar');
-
-            function openSidebar() {
-                sidebar.classList.add('active');
-                sidebarOverlay.classList.add('active');
-            }
-
-            function closeSidebarFn() {
-                sidebar.classList.remove('active');
-                sidebarOverlay.classList.remove('active');
-            }
-
-            hamburgerBtn.addEventListener('click', openSidebar);
-            closeSidebar.addEventListener('click', closeSidebarFn);
-            sidebarOverlay.addEventListener('click', closeSidebarFn);
-
-            const isAuthenticated = auth.isAuthenticated();
+            const navLinks = document.querySelectorAll('.nav-link');
             
-            if (isAuthenticated) {
-                const user = auth.getUser();
-                if (user) {
-                    const fullName = `${user.last_name || ''}, ${user.first_name || ''}${user.middle_name ? ' ' + user.middle_name : ''}`;
-                    document.getElementById('sidebarName').textContent = fullName;
-                    document.getElementById('sidebarAvatar').textContent = user.first_name ? user.first_name.charAt(0).toUpperCase() : '-';
-                    document.getElementById('sidebarId').textContent = user.school_id || '-';
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const view = link.dataset.view;
                     
-                    document.getElementById('logoutBtn').addEventListener('click', (e) => { e.preventDefault(); auth.logout(); });
-                    document.getElementById('logoutBtnSidebar').addEventListener('click', (e) => { e.preventDefault(); auth.logout(); });
-                }
-            } else {
-                window.location.href = 'guest-view.html';
-                return;
-            }
-
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                    
+                    document.querySelectorAll('.view-section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    document.getElementById(view + 'View').classList.add('active');
+                    
+                    if (view === 'gallery') {
+                        loadAlumni();
+                    }
+                });
+            });
+            
             let allAlumni = [];
-
-            loadAlumni();
-
+            let alumniLoaded = false;
+            
             document.getElementById('searchInput').addEventListener('input', filterAlumni);
             document.getElementById('courseFilter').addEventListener('change', filterAlumni);
             document.getElementById('yearFilter').addEventListener('change', filterAlumni);
-
+            
             async function loadAlumni() {
+                if (alumniLoaded) return;
+                
                 try {
-                    const alumni = await api.getApprovedAlumni();
-                    allAlumni = alumni;
+                    const alumni = await api.getPublicAlumni();
+                    allAlumni = alumni || [];
+                    alumniLoaded = true;
                     
-                    populateYearFilter(alumni);
-                    renderAlumni(alumni);
+                    populateYearFilter(allAlumni);
+                    renderAlumni(allAlumni);
                 } catch (error) {
-                    document.getElementById('alumniGrid').innerHTML = '<div class="no-results">Error loading alumni</div>';
+                    try {
+                        const alumni = await api.getApprovedAlumni();
+                        allAlumni = alumni || [];
+                        alumniLoaded = true;
+                        
+                        populateYearFilter(allAlumni);
+                        renderAlumni(allAlumni);
+                    } catch (err) {
+                        document.getElementById('alumniGrid').innerHTML = '<div class="no-results">No alumni found</div>';
+                    }
                 }
             }
-
+            
             function populateYearFilter(alumni) {
                 const years = [...new Set(alumni.map(a => a.graduation_year))].sort();
                 const yearFilter = document.getElementById('yearFilter');
@@ -328,12 +354,12 @@
                     yearFilter.appendChild(option);
                 });
             }
-
+            
             function filterAlumni() {
                 const search = document.getElementById('searchInput').value.toLowerCase();
                 const course = document.getElementById('courseFilter').value;
                 const year = document.getElementById('yearFilter').value;
-
+                
                 const filtered = allAlumni.filter(alumni => {
                     const fullName = `${alumni.first_name} ${alumni.middle_name || ''} ${alumni.last_name}`.toLowerCase();
                     const matchesSearch = fullName.includes(search);
@@ -342,10 +368,10 @@
                     
                     return matchesSearch && matchesCourse && matchesYear;
                 });
-
+                
                 renderAlumni(filtered);
             }
-
+            
             function renderAlumni(alumni) {
                 const grid = document.getElementById('alumniGrid');
                 
@@ -353,7 +379,7 @@
                     grid.innerHTML = '<div class="no-results">No alumni found</div>';
                     return;
                 }
-
+                
                 grid.innerHTML = alumni.map(alumni => {
                     const fullName = `${alumni.last_name}, ${alumni.first_name}${alumni.middle_name ? ' ' + alumni.middle_name : ''}`;
                     const initial = alumni.first_name ? alumni.first_name.charAt(0).toUpperCase() : '?';
@@ -368,6 +394,18 @@
                         </div>
                     `;
                 }).join('');
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (auth.isAuthenticated()) {
+                const user = auth.getUser();
+                if (user.role === 'admin') {
+                    window.location.href = 'admin-home.html';
+                } else {
+                    window.location.href = 'home.html';
+                }
             }
         });
     </script>

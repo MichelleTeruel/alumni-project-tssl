@@ -48,11 +48,24 @@
             color: #667eea;
             background: #f0f4ff;
         }
+        .navbar-left {
+            display: flex;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
     <nav class="navbar">
-        <div class="logo">Alumni<span>Tracking</span></div>
+        <div class="navbar-left">
+            <button class="hamburger-btn" id="hamburgerBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="logo">Alumni<span>Tracking</span></div>
+        </div>
         <ul>
             <li><a href="home.html">Home</a></li>
             <li><a href="tracer-form.html" class="active">Tracer Form</a></li>
@@ -60,6 +73,37 @@
             <li><a href="#" id="logoutBtn">Logout</a></li>
         </ul>
     </nav>
+    
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Menu</h2>
+            <button class="close-sidebar" id="closeSidebar">&times;</button>
+        </div>
+        <div class="sidebar-content">
+            <div class="sidebar-profile" id="sidebarProfile">
+                <div class="sidebar-avatar" id="sidebarAvatar">-</div>
+                <div class="sidebar-profile-name" id="sidebarName">-</div>
+                <div class="sidebar-profile-id" id="sidebarId">-</div>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="tracer-form.html" class="active">📋 Tracer Form</a></li>
+            </ul>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Utilities</div>
+                <ul class="sidebar-menu">
+                    <li><button class="sidebar-utility-btn" onclick="alert('Notifications - Coming soon!')"><span class="icon">🔔</span> Notifications</button></li>
+                    <li><button class="sidebar-utility-btn" onclick="alert('Announcements - Coming soon!')"><span class="icon">📢</span> Announcements</button></li>
+                    <li><button class="sidebar-utility-btn" onclick="alert('Messages - Coming soon!')"><span class="icon">💬</span> Messages</button></li>
+                    <li><button class="sidebar-utility-btn" onclick="alert('Settings - Coming soon!')"><span class="icon">⚙️</span> Settings</button></li>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <ul class="sidebar-menu">
+                    <li><a href="#" id="logoutBtnSidebar">🚪 Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
     
     <div class="container">
         <div class="card">
@@ -126,6 +170,39 @@
         </div>
     </div>
     <script src="js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const closeSidebar = document.getElementById('closeSidebar');
+
+            function openSidebar() {
+                sidebar.classList.add('active');
+                sidebarOverlay.classList.add('active');
+            }
+
+            function closeSidebarFn() {
+                sidebar.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+            }
+
+            hamburgerBtn.addEventListener('click', openSidebar);
+            closeSidebar.addEventListener('click', closeSidebarFn);
+            sidebarOverlay.addEventListener('click', closeSidebarFn);
+
+            const user = auth.getUser();
+            if (user) {
+                const fullName = `${user.last_name || ''}, ${user.first_name || ''}${user.middle_name ? ' ' + user.middle_name : ''}`;
+                document.getElementById('sidebarName').textContent = fullName;
+                document.getElementById('sidebarAvatar').textContent = user.first_name ? user.first_name.charAt(0).toUpperCase() : '-';
+                document.getElementById('sidebarId').textContent = user.school_id || '-';
+                
+                document.getElementById('logoutBtn').addEventListener('click', (e) => { e.preventDefault(); auth.logout(); });
+                document.getElementById('logoutBtnSidebar').addEventListener('click', (e) => { e.preventDefault(); auth.logout(); });
+            }
+        });
+    </script>
     <script src="js/app.js"></script>
 </body>
 </html>

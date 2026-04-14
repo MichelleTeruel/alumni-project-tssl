@@ -88,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadSubmissions() {
         try {
             const submissions = await api.getSubmissions();
+            submissionsData = submissions;
             renderSubmissions(submissions);
         } catch (error) {
             submissionsBody.innerHTML = `<tr><td colspan="8">Error: ${error.message}</td></tr>`;
@@ -101,16 +102,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         submissionsBody.innerHTML = submissions.map(sub => `
-            <tr>
-                <td>${sub.school_id || '-'}</td>
-                <td>${sub.last_name}, ${sub.first_name} ${sub.middle_name || ''}</td>
-                <td>${sub.course}</td>
-                <td>${sub.graduation_year}</td>
-                <td>${sub.current_work || '-'}</td>
-                <td class="status-${sub.employment_status}">${sub.employment_status}</td>
-                <td class="status-${sub.status}">${sub.status}</td>
+            <tr data-id="${sub.id}">
+                <td class="school-id">${sub.school_id || '-'}</td>
+                <td class="name-cell">
+                    <span class="display-value">${sub.last_name}, ${sub.first_name} ${sub.middle_name || ''}</span>
+                </td>
+                <td class="course-cell">
+                    <span class="display-value">${sub.course}</span>
+                </td>
+                <td class="year-cell">
+                    <span class="display-value">${sub.graduation_year}</span>
+                </td>
+                <td class="work-cell">
+                    <span class="display-value">${sub.current_work || '-'}</span>
+                </td>
+                <td class="employment-cell">
+                    <span class="display-value status-${sub.employment_status}">${sub.employment_status}</span>
+                </td>
+                <td class="status-cell">
+                    <span class="display-value status-${sub.status}">${sub.status}</span>
+                </td>
                 <td class="actions">
-                    <button class="btn" style="padding:4px 8px;font-size:12px;width:auto;display:inline-block;margin-right:3px;" onclick="editAlumni(${sub.id})">Edit</button>
+                    <button class="btn edit-btn" style="padding:4px 8px;font-size:12px;width:auto;display:inline-block;margin-right:3px;" onclick="startEdit(${sub.id})">Edit</button>
                     ${sub.status === 'pending' ? `
                         <button class="btn btn-success" style="padding:4px 8px;font-size:12px;width:auto;display:inline-block;margin-right:3px;" onclick="approveSubmission(${sub.id})">Approve</button>
                         <button class="btn btn-danger" style="padding:4px 8px;font-size:12px;width:auto;display:inline-block;margin-right:3px;" onclick="rejectSubmission(${sub.id})">Reject</button>
@@ -124,6 +137,97 @@ document.addEventListener('DOMContentLoaded', () => {
             </tr>
         `).join('');
     }
+
+    let currentEditingId = null;
+    let submissionsData = [];
+
+    window.startEdit = function(id) {
+        if (currentEditingId !== null) {
+            cancelEdit();
+        }
+        
+        const row = document.querySelector(`tr[data-id="${id}"]`);
+        const sub = submissionsData.find(s => s.id === id);
+        if (!sub || !row) return;
+        
+        currentEditingId = id;
+        
+        const nameCell = row.querySelector('.name-cell');
+        nameCell.innerHTML = `
+            <input type="text" class="edit-input" id="edit-firstName" value="${sub.first_name || ''}" placeholder="First Name" style="margin-bottom:4px;">
+            <input type="text" class="edit-input" id="edit-middleName" value="${sub.middle_name || ''}" placeholder="Middle Name" style="margin-bottom:4px;">
+            <input type="text" class="edit-input" id="edit-lastName" value="${sub.last_name || ''}" placeholder="Last Name">
+        `;
+        
+        const courseCell = row.querySelector('.course-cell');
+        courseCell.innerHTML = `
+            <select class="edit-select" id="edit-course">
+                <option value="BS Information Technology" ${sub.course === 'BS Information Technology' ? 'selected' : ''}>BS Information Technology</option>
+                <option value="BS Information System" ${sub.course === 'BS Information System' ? 'selected' : ''}>BS Information System</option>
+            </select>
+        `;
+        
+        const yearCell = row.querySelector('.year-cell');
+        yearCell.innerHTML = `<input type="number" class="edit-input" id="edit-year" value="${sub.graduation_year || ''}" min="2000" max="2030">`;
+        
+        const workCell = row.querySelector('.work-cell');
+        workCell.innerHTML = `<input type="text" class="edit-input" id="edit-work" value="${sub.current_work || ''}" placeholder="Current Work">`;
+        
+        const employmentCell = row.querySelector('.employment-cell');
+        employmentCell.innerHTML = `
+            <select class="edit-select" id="edit-employment">
+                <option value="employed" ${sub.employment_status === 'employed' ? 'selected' : ''}>employed</option>
+                <option value="unemployed" ${sub.employment_status === 'unemployed' ? 'selected' : ''}>unemployed</option>
+            </select>
+        `;
+        
+        const actionsCell = row.querySelector('.actions');
+        actionsCell.innerHTML = `
+            <button class="btn btn-success" style="padding:4px 8px;font-size:12px;width:auto;display:inline-block;margin-right:3px;" onclick="saveEdit(${sub.id})">Done</button>
+            <button class="btn btn-secondary" style="padding:4px 8px;font-size:12px;width:auto;display:inline-block;margin-right:3px;" onclick="cancelEdit()">Cancel</button>
+        `;
+    };
+
+    window.saveEdit = async function(id) {
+        const row = document.querySelector(`tr[data-id="${id}"]`);
+        
+        const newFirstName = document.getElementById('edit-firstName').value;
+        const newMiddleName = document.getElementById('edit-middleName').value;
+        const newLastName = document.getElementById('edit-lastName').value;
+        const newCourse = document.getElementById('edit-course').value;
+        const newYear = document.getElementById('edit-year').value;
+        const newWork = document.getElementById('edit-work').value;
+        const newEmployment = document.getElementById('edit-employment').value;
+        
+        if (!newFirstName || !newLastName || !newCourse || !newYear) {
+            showMessage('Please fill in required fields', 'error');
+            return;
+        }
+        
+        try {
+            await api.updateAlumni(id, {
+                first_name: newFirstName,
+                middle_name: newMiddleName,
+                last_name: newLastName,
+                course: newCourse,
+                graduation_year: newYear,
+                current_work: newWork,
+                employment_status: newEmployment
+            });
+            showMessage('Alumni updated successfully', 'success');
+            currentEditingId = null;
+            loadSubmissions();
+        } catch (error) {
+            showMessage(error.message, 'error');
+        }
+    };
+
+    window.cancelEdit = function() {
+        if (currentEditingId !== null) {
+            currentEditingId = null;
+            loadSubmissions();
+        }
+    };
 
     function showStatus(text, type) {
         const statusMessage = document.getElementById('statusMessage');
@@ -162,38 +266,6 @@ document.addEventListener('DOMContentLoaded', () => {
             loadSubmissions();
         } catch (error) {
             showMessage(error.message, 'error');
-        }
-    };
-
-    window.editAlumni = async function(id) {
-        const submissions = await api.getSubmissions();
-        const sub = submissions.find(s => s.id === id);
-        if (!sub) return;
-
-        const newFirstName = prompt('First Name:', sub.first_name);
-        const newMiddleName = prompt('Middle Name:', sub.middle_name || '');
-        const newLastName = prompt('Last Name:', sub.last_name);
-        const newCourse = prompt('Course:', sub.course);
-        const newYear = prompt('Graduation Year:', sub.graduation_year);
-        const newWork = prompt('Current Work:', sub.current_work || '');
-        const newEmployment = prompt('Employment Status (employed/unemployed):', sub.employment_status);
-
-        if (newFirstName && newLastName && newCourse && newYear) {
-            try {
-                await api.updateAlumni(id, {
-                    first_name: newFirstName,
-                    middle_name: newMiddleName,
-                    last_name: newLastName,
-                    course: newCourse,
-                    graduation_year: newYear,
-                    current_work: newWork,
-                    employment_status: newEmployment
-                });
-                showMessage('Alumni updated successfully', 'success');
-                loadSubmissions();
-            } catch (error) {
-                showMessage(error.message, 'error');
-            }
         }
     };
 

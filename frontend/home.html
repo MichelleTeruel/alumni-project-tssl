@@ -183,18 +183,143 @@
             color: #666;
             line-height: 1.6;
         }
+        .tracer-status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .tracer-status.pending {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+        }
+        .tracer-status.submitted {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+        }
+        .tracer-status.approved {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+        .tracer-status .status-icon {
+            font-size: 1.2rem;
+        }
+        .tracer-status .status-text {
+            font-weight: 600;
+        }
+        .tracer-status.pending .status-text {
+            color: #856404;
+        }
+        .tracer-status.submitted .status-text {
+            color: #0c5460;
+        }
+        .tracer-status.approved .status-text {
+            color: #155724;
+        }
+        .bio-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        .bio-section h2 {
+            margin: 0 0 15px 0;
+            color: #333;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .bio-content {
+            color: #666;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+        .bio-content.empty {
+            color: #999;
+            font-style: italic;
+        }
+        .bio-edit-area {
+            width: 100%;
+            min-height: 100px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+        }
+        .bio-edit-area:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .bio-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        .bio-actions .btn {
+            padding: 8px 16px;
+            width: auto;
+        }
+        .navbar-left {
+            display: flex;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
     <nav class="navbar">
-        <div class="logo">Alumni<span>Tracking</span></div>
+        <div class="navbar-left">
+            <button class="hamburger-btn" id="hamburgerBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="logo">Alumni<span>Tracking</span></div>
+        </div>
         <ul>
             <li><a href="home.html" class="active">Home</a></li>
-            <li><a href="tracer-form.html">Tracer Form</a></li>
             <li><a href="gallery.html">Gallery</a></li>
             <li><a href="#" id="logoutBtn">Logout</a></li>
         </ul>
     </nav>
+    
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Menu</h2>
+            <button class="close-sidebar" id="closeSidebar">&times;</button>
+        </div>
+        <div class="sidebar-content">
+            <div class="sidebar-profile" id="sidebarProfile">
+                <div class="sidebar-avatar" id="sidebarAvatar">-</div>
+                <div class="sidebar-profile-name" id="sidebarName">-</div>
+                <div class="sidebar-profile-id" id="sidebarId">-</div>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="tracer-form.html" class="active">📋 Tracer Form</a></li>
+            </ul>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Utilities</div>
+                <ul class="sidebar-menu">
+                    <li><button class="sidebar-utility-btn" onclick="alert('Notifications - Coming soon!')"><span class="icon">🔔</span> Notifications</button></li>
+                    <li><button class="sidebar-utility-btn" onclick="alert('Announcements - Coming soon!')"><span class="icon">📢</span> Announcements</button></li>
+                    <li><button class="sidebar-utility-btn" onclick="alert('Messages - Coming soon!')"><span class="icon">💬</span> Messages</button></li>
+                    <li><button class="sidebar-utility-btn" onclick="alert('Settings - Coming soon!')"><span class="icon">⚙️</span> Settings</button></li>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <ul class="sidebar-menu">
+                    <li><a href="#" id="logoutBtnSidebar">🚪 Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
     
     <div class="home-container">
         <div class="profile-card">
@@ -231,9 +356,32 @@
             <div class="welcome-msg">
                 <h2>Welcome!</h2>
                 <p>Stay connected with your alma mater and help us improve our programs by updating your professional journey.</p>
+                <div class="tracer-status" id="tracerStatus">
+                    <span class="status-icon">⏳</span>
+                    <span class="status-text">Loading...</span>
+                </div>
             </div>
             <div id="announcementsList">
                 <p>Loading announcements...</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container" style="max-width: 1100px; margin: 0 auto; padding: 0 20px;">
+        <div class="bio-section">
+            <h2>📝 My Bio</h2>
+            <div id="bioDisplay">
+                <p class="bio-content" id="bioText">No bio yet. Click edit to add one.</p>
+            </div>
+            <div id="bioEdit" style="display: none;">
+                <textarea class="bio-edit-area" id="bioTextarea" placeholder="Write something about yourself..."></textarea>
+                <div class="bio-actions">
+                    <button class="btn btn-primary" id="saveBioBtn">Save Bio</button>
+                    <button class="btn btn-secondary" id="cancelBioBtn">Cancel</button>
+                </div>
+            </div>
+            <div style="margin-top: 10px;">
+                <button class="btn btn-secondary" id="editBioBtn" style="width: auto; padding: 8px 16px;">Edit Bio</button>
             </div>
         </div>
     </div>
@@ -243,7 +391,27 @@
         document.addEventListener('DOMContentLoaded', () => {
             if (!auth.requireAuth()) return;
 
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const closeSidebar = document.getElementById('closeSidebar');
+
+            function openSidebar() {
+                sidebar.classList.add('active');
+                sidebarOverlay.classList.add('active');
+            }
+
+            function closeSidebarFn() {
+                sidebar.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+            }
+
+            hamburgerBtn.addEventListener('click', openSidebar);
+            closeSidebar.addEventListener('click', closeSidebarFn);
+            sidebarOverlay.addEventListener('click', closeSidebarFn);
+
             document.getElementById('logoutBtn').addEventListener('click', () => auth.logout());
+            document.getElementById('logoutBtnSidebar').addEventListener('click', () => auth.logout());
 
             const user = auth.getUser();
             
@@ -251,9 +419,14 @@
             document.getElementById('profileName').textContent = fullName;
             document.getElementById('profileAvatar').textContent = user.first_name ? user.first_name.charAt(0).toUpperCase() : '-';
             document.getElementById('profileSchoolId').textContent = user.school_id || '-';
+            
+            document.getElementById('sidebarName').textContent = fullName;
+            document.getElementById('sidebarAvatar').textContent = user.first_name ? user.first_name.charAt(0).toUpperCase() : '-';
+            document.getElementById('sidebarId').textContent = user.school_id || '-';
 
             loadProfile();
             loadAnnouncements();
+            loadBio();
 
             async function loadProfile() {
                 try {
@@ -268,13 +441,100 @@
                         ? '<span class="employment-badge employed">Employed</span>' 
                         : '<span class="employment-badge unemployed">Unemployed</span>';
                     document.getElementById('profileEmployment').innerHTML = badge;
+                    
+                    updateTracerStatus(data.status || 'none');
                 } catch (error) {
+                    updateTracerStatus('none');
                     document.getElementById('profileCourse').textContent = 'Not submitted';
                     document.getElementById('profileYear').textContent = 'Not submitted';
                     document.getElementById('profileWork').textContent = 'Not submitted';
                     document.getElementById('profileEmployment').innerHTML = '<span class="employment-badge unemployed">Not submitted</span>';
                 }
             }
+
+            function updateTracerStatus(status) {
+                const statusEl = document.getElementById('tracerStatus');
+                statusEl.className = 'tracer-status';
+                
+                let icon, text, className;
+                switch(status) {
+                    case 'pending':
+                        icon = '⏳';
+                        text = 'Tracer Form: Pending Review';
+                        className = 'pending';
+                        break;
+                    case 'submitted':
+                        icon = '📤';
+                        text = 'Tracer Form: Submitted';
+                        className = 'submitted';
+                        break;
+                    case 'approved':
+                        icon = '✅';
+                        text = 'Tracer Form: Approved';
+                        className = 'approved';
+                        break;
+                    default:
+                        icon = '📝';
+                        text = 'Tracer Form: Not Submitted';
+                        className = 'pending';
+                }
+                
+                statusEl.classList.add(className);
+                statusEl.innerHTML = `<span class="status-icon">${icon}</span><span class="status-text">${text}</span>`;
+            }
+
+            function loadBio() {
+                const bioKey = `user_bio_${user.school_id || user.id}`;
+                const bio = localStorage.getItem(bioKey) || '';
+                
+                const bioText = document.getElementById('bioText');
+                if (bio) {
+                    bioText.textContent = bio;
+                    bioText.classList.remove('empty');
+                } else {
+                    bioText.textContent = 'No bio yet. Click edit to add one.';
+                    bioText.classList.add('empty');
+                }
+            }
+
+            const editBioBtn = document.getElementById('editBioBtn');
+            const bioDisplay = document.getElementById('bioDisplay');
+            const bioEdit = document.getElementById('bioEdit');
+            const bioTextarea = document.getElementById('bioTextarea');
+            const saveBioBtn = document.getElementById('saveBioBtn');
+            const cancelBioBtn = document.getElementById('cancelBioBtn');
+
+            editBioBtn.addEventListener('click', () => {
+                const bioKey = `user_bio_${user.school_id || user.id}`;
+                bioTextarea.value = localStorage.getItem(bioKey) || '';
+                bioDisplay.style.display = 'none';
+                bioEdit.style.display = 'block';
+                editBioBtn.style.display = 'none';
+            });
+
+            cancelBioBtn.addEventListener('click', () => {
+                bioDisplay.style.display = 'block';
+                bioEdit.style.display = 'none';
+                editBioBtn.style.display = 'inline-block';
+            });
+
+            saveBioBtn.addEventListener('click', () => {
+                const bioKey = `user_bio_${user.school_id || user.id}`;
+                localStorage.setItem(bioKey, bioTextarea.value);
+                
+                const bioText = document.getElementById('bioText');
+                if (bioTextarea.value) {
+                    bioText.textContent = bioTextarea.value;
+                    bioText.classList.remove('empty');
+                } else {
+                    bioText.textContent = 'No bio yet. Click edit to add one.';
+                    bioText.classList.add('empty');
+                }
+                
+                bioDisplay.style.display = 'block';
+                bioEdit.style.display = 'none';
+                editBioBtn.style.display = 'inline-block';
+            });
 
             async function loadAnnouncements() {
                 try {
